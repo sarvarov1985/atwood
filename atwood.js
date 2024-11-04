@@ -18,9 +18,10 @@ const render = Render.create({
 Render.run(render);
 Runner.run(Runner.create(), engine);
 
-// Define pulley properties
+// Define a dynamic pulley that can rotate
 const pulley = Bodies.circle(400, 100, 20, {
-  isStatic: true,
+  isStatic: false, // Allow the pulley to rotate
+  inertia: Infinity, // Prevents movement, but allows rotation
   render: { fillStyle: 'black' }
 });
 World.add(world, pulley);
@@ -33,7 +34,8 @@ World.add(world, [mass1, mass2]);
 // Create constraints to simulate the rope tied to opposite sides of the pulley
 const rope1 = Constraint.create({
   bodyA: mass1,
-  pointB: { x: 380, y: 100 }, // Connect to left side of pulley
+  bodyB: pulley,           // Attach directly to the pulley
+  pointB: { x: -20, y: 0 }, // Connect to the left side of the pulley
   stiffness: 1,
   length: 200,
   render: { strokeStyle: 'gray', lineWidth: 2 }
@@ -41,7 +43,8 @@ const rope1 = Constraint.create({
 
 const rope2 = Constraint.create({
   bodyA: mass2,
-  pointB: { x: 420, y: 100 }, // Connect to right side of pulley
+  bodyB: pulley,            // Attach directly to the pulley
+  pointB: { x: 20, y: 0 },  // Connect to the right side of the pulley
   stiffness: 1,
   length: 200,
   render: { strokeStyle: 'gray', lineWidth: 2 }
